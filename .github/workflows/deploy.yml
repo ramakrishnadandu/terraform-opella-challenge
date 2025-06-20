@@ -1,0 +1,27 @@
+name: Deploy Dev Infrastructure
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.0
+
+    - name: Terraform Init
+      run: terraform -chdir=environments/dev init
+
+    - name: Terraform Plan
+      run: terraform -chdir=environments/dev plan
+
+    - name: Terraform Apply
+      run: terraform -chdir=environments/dev apply -auto-approve
